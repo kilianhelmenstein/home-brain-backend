@@ -1,0 +1,9 @@
+{
+   "things": [
+      {
+         "name": "Example name",
+         "mac_address": "00:AA:BB:CC:DD:EE",
+         "type": "eq3-thermostat"
+      }
+   ]
+}

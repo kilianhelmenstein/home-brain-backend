@@ -1,0 +1,9 @@
+{
+   "things": [
+      {
+         "name": "Example name",
+         "topic": "example/topic",
+         "type": "hygrometer"
+      }
+   ]
+}
