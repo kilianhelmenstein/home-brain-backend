@@ -1,0 +1,14 @@
+{
+   "things": [
+      {
+         "name": "Luft Badezimmer",
+         "topic": "wohnung/badezimmer/hygrometer",
+         "type": "hygrometer"
+      },
+      {
+         "name": "Luft Schlafzimmer",
+         "topic": "wohnung/schlafzimmer/hygrometer",
+         "type": "hygrometer"
+      }
+   ]
+}
