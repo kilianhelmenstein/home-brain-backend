@@ -32,17 +32,9 @@ export class BluetoothEq3Thermostats implements IThings {
                console.log(`Discovered device is not explicitly configured`);
             }
 
-            try {
-               console.log(`Trying to connect and setup...`);
-               await bluetoothDevice.connectAndSetup();
-               console.log(`Connected and setup BLE ${isConfigured ? config.name : bluetoothDevice.address}`);
-               
-               idCount += 1;
-               const thermostat = new BluetoothEq3Thermostat(bluetoothDevice, idCount, isConfigured ? config.name : bluetoothDevice.address);
-               this.thermostats.push(thermostat);
-            } catch (e) {
-               console.log(`Error while connecting to ${isConfigured ? config.name : bluetoothDevice.address}`, e);
-            }
+            idCount += 1;
+            const thermostat = new BluetoothEq3Thermostat(bluetoothDevice, idCount, isConfigured ? config.name : bluetoothDevice.address);
+            this.thermostats.push(thermostat);
          });
       } catch (e) {
          console.log(`Error while discovering bluetooth devices: `, e);
