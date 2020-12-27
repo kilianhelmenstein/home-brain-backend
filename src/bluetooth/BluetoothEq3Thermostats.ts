@@ -1,7 +1,7 @@
 import { IThings } from '../domain/IThings';
 import { IThing, IThingData, ThingType } from '../domain/IThing';
 
-const EQ3BLE = require('eq3ble');
+import EQ3BLE from '@nullent1ty/eq3ble';
 
 interface IBluetoothThermostatConfig {
    name: string;
@@ -37,6 +37,7 @@ export class BluetoothEq3Thermostats implements IThings {
       for (const config of this.configs) {
          try {
             EQ3BLE.discoverById(config.mac_address, async (bluetoothDevice: any) => {
+               console.log(`Found BLE device ${config.mac_address}`);
                await bluetoothDevice.connectAndSetup();
                idCount += 1;
                const thermostat = new BluetoothEq3Thermostat(bluetoothDevice, idCount, config.name);
