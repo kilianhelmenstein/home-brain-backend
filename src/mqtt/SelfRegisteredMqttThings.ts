@@ -8,6 +8,7 @@ const registrationTopic = 'registration';
 
 interface RegistrationInfo {
    clientId: string;
+   name: string;
    topic: string;
    type: string;
 }
@@ -34,7 +35,7 @@ export class SelfRegisteredMqttThings implements IThings {
          const registrationInfo = JSON.parse(message.toString()) as RegistrationInfo;
          if (registrationInfo.type === 'onoff') {
             this.idCounter += 1;
-            this.things.push(new MqttOnOffThing(this.mqttClient, registrationInfo.topic, this.idCounter, topic));
+            this.things.push(new MqttOnOffThing(this.mqttClient, registrationInfo.topic, this.idCounter, registrationInfo.name));
          } else {
             console.log('Type not supported');
          }
