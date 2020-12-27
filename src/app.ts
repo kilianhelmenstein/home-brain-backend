@@ -25,9 +25,9 @@ const port = process.env.APP_PORT || 5000;
 const mqttServer = process.env.MQTT_SERVER || '';
 
 async function run() {
-   console.log(`Try connecting to ${mqttServer}...`);
+   console.log(`Try connecting to MQTT-Server: ${mqttServer}...`);
    const mqttClient = await mqtt.connectAsync(mqttServer, { protocolId: 'MQIsdp', protocolVersion: 3, connectTimeout:1000 });
-   console.log(`Connected to ${mqttServer}`);
+   console.log(`Connected to MQTT-Server: ${mqttServer}`);
 
    const bluetoothThermostats = new BluetoothEq3Thermostats(bluetoothThings.things, 10);
    await bluetoothThermostats.init();

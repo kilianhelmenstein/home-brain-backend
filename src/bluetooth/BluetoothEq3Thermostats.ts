@@ -36,15 +36,17 @@ export class BluetoothEq3Thermostats implements IThings {
 
       for (const config of this.configs) {
          try {
+            console.log(`Trying to discover BLE ${config.name} (${config.mac_address})...`);
             EQ3BLE.discoverById(config.mac_address, async (bluetoothDevice: any) => {
-               console.log(`Found BLE device ${config.mac_address}`);
+               console.log(`Discovered BLE ${config.name}. Trying to connect and setup...`);
                await bluetoothDevice.connectAndSetup();
+               console.log(`Connected and setup BLE ${config.name}`);
                idCount += 1;
                const thermostat = new BluetoothEq3Thermostat(bluetoothDevice, idCount, config.name);
                this.thermostats.push(thermostat);
             });
          } catch (e) {
-            console.log(`Error while discovering bluetooth thermostat ${config.mac_address} (Name: ${config.name}): `, e);
+            console.log(`Error while discovering bluetooth thermostat ${config.name} (${config.mac_address}): `, e);
          }
       }
    }
