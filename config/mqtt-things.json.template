@@ -1,0 +1,9 @@
+{
+   "things": [
+      {
+         "name": "Test Hygrometer",
+         "topic": "wohnung/Badezimmer/Luft",
+         "type": "hygrometer"
+      }
+   ]
+}

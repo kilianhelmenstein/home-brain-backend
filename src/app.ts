@@ -14,8 +14,8 @@ import { SelfRegisteredMqttThings } from './mqtt/SelfRegisteredMqttThings';
 import { ManualRegisteredMqttThings } from './mqtt/ManualRegisteredMqttThings';
 import { BluetoothEq3Thermostats } from './bluetooth/BluetoothEq3Thermostats';
 
-import * as mqttThings from './mqtt-things.json';
-import * as bluetoothThings from './bluetooth-things.json';
+import * as mqttThings from '../config/mqtt-things.json';
+import * as bluetoothThings from '../config/bluetooth-things.json';
 
 dotenv.config({
    path: '.env'
