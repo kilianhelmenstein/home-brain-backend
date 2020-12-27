@@ -26,7 +26,7 @@ export class ManualRegisteredMqttThings implements IThings {
             idCounter += 1;
             this.things.push(new MqttHygrometer(mqttClient, config.topic, idCounter, config.name));
          } else {
-            console.log('Type not supported');
+            console.log(`Type ${config.type} of thing ${config.name} not supported`);
          }
       }
    }
