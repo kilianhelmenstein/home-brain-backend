@@ -34,20 +34,35 @@ export class BluetoothEq3Thermostats implements IThings {
    async init(): Promise<void> {
       let idCount = this.idOffset;
 
-      for (const config of this.configs) {
-         try {
-            console.log(`Trying to discover BLE ${config.name} (${config.mac_address})...`);
-            EQ3BLE.discoverById(config.mac_address, async (bluetoothDevice: any) => {
-               console.log(`Discovered BLE ${config.name}. Trying to connect and setup...`);
+      try {
+         console.log(`Trying to discover bluetooth devices...`);
+         EQ3BLE.discoverAll(async (bluetoothDevice: any) => {
+            console.log(`Discovered ${bluetoothDevice.address}...`);
+            
+            const config = this.configs.filter(c => c.mac_address === bluetoothDevice.address)[0];
+            
+            const isConfigured = config !== undefined;
+
+            if (isConfigured) {
+               console.log(`Discovered device matches to configured thing '${config.name}'`);
+            } else {
+               console.log(`Discovered device is not explicitly configured`);
+            }
+
+            try {
+               console.log(`Trying to connect and setup...`);
                await bluetoothDevice.connectAndSetup();
-               console.log(`Connected and setup BLE ${config.name}`);
+               console.log(`Connected and setup BLE ${isConfigured ? config.name : bluetoothDevice.address}`);
+               
                idCount += 1;
-               const thermostat = new BluetoothEq3Thermostat(bluetoothDevice, idCount, config.name);
+               const thermostat = new BluetoothEq3Thermostat(bluetoothDevice, idCount, isConfigured ? config.name : bluetoothDevice.address);
                this.thermostats.push(thermostat);
-            });
-         } catch (e) {
-            console.log(`Error while discovering bluetooth thermostat ${config.name} (${config.mac_address}): `, e);
-         }
+            } catch (e) {
+               console.log(`Error while connecting to ${isConfigured ? config.name : bluetoothDevice.address}`, e);
+            }
+         });
+      } catch (e) {
+         console.log(`Error while discovering bluetooth devices: `, e);
       }
    }
 
