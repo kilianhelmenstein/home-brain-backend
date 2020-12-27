@@ -25,6 +25,10 @@ export class BluetoothEq3Thermostat implements IThing {
    }
 
    async telemetry(): Promise<IThermostatInfo> {
-      return await this.eq3.getInfo();
+      try {
+         return await this.eq3.getInfo();
+      } catch (e) {
+         console.log(`Error while getInfo() from ${this.data.name}: `, e);
+      }
    }
 }
