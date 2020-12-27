@@ -8,22 +8,6 @@ interface IBluetoothThermostatConfig {
    mac_address: string;
 }
 
-class BluetoothEq3Thermostat implements IThing {
-   data: IThingData;
-
-   constructor(private device: any, id: number, name: string) {
-      this.data = { id, name, type: ThingType.Thermostat };
-   }
-
-   handleCommand(command: any): Promise<void> {
-      throw new Error('Method not implemented.');
-   }
-
-   telemetry(): Promise<any> {
-      throw new Error('Method not implemented.');
-   }
-}
-
 export class BluetoothEq3Thermostats implements IThings {
    private thermostats: BluetoothEq3Thermostat[];
 
@@ -38,9 +22,7 @@ export class BluetoothEq3Thermostats implements IThings {
          console.log(`Trying to discover bluetooth devices...`);
          EQ3BLE.discoverAll(async (bluetoothDevice: any) => {
             console.log(`Discovered ${bluetoothDevice.address}...`);
-            
             const config = this.configs.filter(c => c.mac_address === bluetoothDevice.address)[0];
-            
             const isConfigured = config !== undefined;
 
             if (isConfigured) {
