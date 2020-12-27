@@ -13,5 +13,6 @@ export interface IThingData {
 export interface IThing {
    data: IThingData;
    handleCommand(command: any): Promise<void>;
+   status(): Promise<any>;
    telemetry(): Promise<any>;
 }

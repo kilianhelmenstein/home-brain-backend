@@ -17,7 +17,7 @@ export const ThingsController = (things: IThings): Router => {
     }
   });
 
-  router.put('/:id', async (req: Request, res: Response) => {
+  router.post('/:id/commands', async (req: Request, res: Response) => {
     try {
       const id = Number(req.params.id);
       const thing = await things.one(id);
@@ -28,6 +28,24 @@ export const ThingsController = (things: IThings): Router => {
 
       await thing!.handleCommand(req.body);
       res.status(200).send();
+    }
+    catch (error) {
+      console.log(error);
+      res.status(404).send(error);
+    }
+  });
+
+  router.get('/:id/status', async (req: Request, res: Response) => {
+    try {
+      const id = Number(req.params.id);
+      const thing = await things.one(id);
+      
+      const isUnknownThing = thing === undefined;
+      if (isUnknownThing)
+        return res.status(404).send();
+
+      const status = await thing!.status();
+      res.status(200).send(status);
     }
     catch (error) {
       console.log(error);

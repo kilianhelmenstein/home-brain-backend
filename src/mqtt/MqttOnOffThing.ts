@@ -24,8 +24,12 @@ export class MqttOnOffThing implements IThing {
       }
    }
 
+   async status(): Promise<any> {
+      throw new Error('On/Off things do not support status');
+   }
+
    async telemetry(): Promise<any> {
-      return;
+      throw new Error('On/Off things do not support telemetry');
    }
 
    private isSwitchCommand(command: any): command is SwitchCommand {

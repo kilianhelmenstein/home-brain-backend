@@ -33,7 +33,11 @@ export class MqttHygrometer implements IThing {
    }
    
    async handleCommand(command: any) {
-      return;
+      throw new Error('Hygrometers do not support commands');
+   }
+
+   async status(): Promise<any> {
+      throw new Error('Hygrometers do not support status');
    }
 
    async telemetry(): Promise<any> {
