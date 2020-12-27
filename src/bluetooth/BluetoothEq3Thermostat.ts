@@ -14,10 +14,14 @@ export interface IThermostatInfo {
 }
 
 export class BluetoothEq3Thermostat implements IThing {
+   private isConnected: boolean;
    data: IThingData;
 
    constructor(private eq3: any, id: number, name: string) {
+      this.isConnected = false;
       this.data = { id, name, type: ThingType.Thermostat };
+
+      this.eq3.on('disconnect', () => this.isConnected = false );
    }
 
    handleCommand(command: any): Promise<void> {
@@ -26,12 +30,16 @@ export class BluetoothEq3Thermostat implements IThing {
 
    async telemetry(): Promise<IThermostatInfo> {
       try {
-         await this.eq3.connectAndSetup();
+         await this.ensureConnection();
          const info = await this.eq3.getInfo();
-         this.eq3.disconnect();
          return info;
       } catch (e) {
          console.log(`Error while getInfo() from ${this.data.name}: `, e);
       }
+   }
+   
+   async ensureConnection() {
+      await this.eq3.connectAndSetup();
+      this.isConnected = true;      
    }
 }
