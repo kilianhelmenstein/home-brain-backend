@@ -38,10 +38,13 @@ export class BluetoothEq3Thermostat implements IThing {
       }
    }
    
-   async ensureConnection() {
-      if (this.isConnected)
+   private async ensureConnection() {
+      if (this.isConnected) {
+         console.log(`Already connected to ${this.data.name}`);
          return;
+      }
       await this.eq3.connectAndSetup();
+      console.log(`Connected to ${this.data.name}`);
       this.isConnected = true;      
    }
 }
