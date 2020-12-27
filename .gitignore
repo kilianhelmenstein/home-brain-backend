@@ -1,2 +1,6 @@
 node_modules
 .env
+
+# Device configurations
+mqtt-things.json
+bluetooth-things.json
