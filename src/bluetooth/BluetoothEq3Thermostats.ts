@@ -2,6 +2,7 @@ import { IThings } from '../domain/IThings';
 import { IThing, IThingData, ThingType } from '../domain/IThing';
 
 import EQ3BLE from '@nullent1ty/eq3ble';
+import { BluetoothEq3Thermostat } from './BluetoothEq3Thermostat';
 
 interface IBluetoothThermostatConfig {
    name: string;
