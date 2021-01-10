@@ -9,11 +9,12 @@ export type TimeOfExecution = {
 }
 
 export class AutomationConfig {
-   id: Id;
-   execution: IntervallOfExecution | TimeOfExecution;
-   thingId: Id;
-   command: string;
-   commandParameter: string;
+   constructor(
+      public id: Id, 
+      public execution: IntervallOfExecution | TimeOfExecution,
+      public thingId: Id,
+      public command: string,
+      public commandParameter: string) {}
 }
 
 export interface IAutomationConfigs {
