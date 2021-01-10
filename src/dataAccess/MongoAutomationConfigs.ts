@@ -1,7 +1,15 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import { Id } from '../domain/Id';
 
-import { IAutomationConfigs, AutomationConfig } from '../domain/IAutomationConfigs';
+import { IAutomationConfigs, AutomationConfig, IntervallOfExecution, TimeOfExecution } from '../domain/IAutomationConfigs';
+
+type MongoAutomation = {
+   _id: ObjectId;
+   execution: IntervallOfExecution | TimeOfExecution;
+   thingId: Id;
+   command: string;
+   commandParameter: string;
+}
 
 export class MongoAutomationConfigs implements IAutomationConfigs {
    private collection = 'automation_configs';
@@ -13,9 +21,9 @@ export class MongoAutomationConfigs implements IAutomationConfigs {
       const client = await MongoClient.connect(this.mongoUrl);
       try {
          const database = client.db(this.databaseName);
-         const configsCollection = database.collection<AutomationConfig>(this.collection);
-         const config = await configsCollection.find().toArray();
-         return config;
+         const configsCollection = database.collection<MongoAutomation>(this.collection);
+         const configs = await configsCollection.find().toArray();
+         return configs.map(c => new AutomationConfig(c._id.toHexString(), c.execution, c.thingId, c.command, c.commandParameter));
       } finally {
          client.close();
       }
@@ -25,9 +33,9 @@ export class MongoAutomationConfigs implements IAutomationConfigs {
       const client = await MongoClient.connect(this.mongoUrl);
       try {
          const database = client.db(this.databaseName);
-         const configsCollection = database.collection<AutomationConfig>(this.collection);
+         const configsCollection = database.collection<MongoAutomation>(this.collection);
          const configs = await configsCollection.find({ thingId }).toArray();
-         return configs;
+         return configs.map(c => new AutomationConfig(c._id.toHexString(), c.execution, c.thingId, c.command, c.commandParameter));
       } finally {
          client.close();
       }
@@ -41,8 +49,13 @@ export class MongoAutomationConfigs implements IAutomationConfigs {
       const client = await MongoClient.connect(this.mongoUrl, { useUnifiedTopology: true });
       try {
          const database = client.db(this.databaseName);
-         const configsCollection = database.collection<AutomationConfig>(this.collection);
-         await configsCollection.insertOne(config);
+         const configsCollection = database.collection<MongoAutomation>(this.collection);
+         await configsCollection.insertOne({
+            execution: config.execution,
+            thingId: config.thingId,
+            command: config.command,
+            commandParameter: config.commandParameter
+          });
          return config;
       } finally {
          client.close();
@@ -53,11 +66,19 @@ export class MongoAutomationConfigs implements IAutomationConfigs {
       const client = await MongoClient.connect(this.mongoUrl, { useUnifiedTopology: true });
       try {
          const database = client.db(this.databaseName);
-         const configsCollection = database.collection<AutomationConfig>(this.collection);
-         const existingConfig = configsCollection.findOne({ thingId: config.thingId });
+         const configsCollection = database.collection<MongoAutomation>(this.collection);
+         const existingConfig = await configsCollection.findOne({ _id: ObjectId.createFromHexString(config.id) });
          
          if (existingConfig)
-            await configsCollection.replaceOne({ thingId: config.thingId }, config);
+            await configsCollection.replaceOne(
+               { thingId: config.thingId }, 
+               {
+                  _id: existingConfig._id,
+                  execution: config.execution,
+                  thingId: config.thingId,
+                  command: config.command,
+                  commandParameter: config.commandParameter
+                });
          else
             await configsCollection.insertOne(config);
          return config;
@@ -70,8 +91,8 @@ export class MongoAutomationConfigs implements IAutomationConfigs {
       const client = await MongoClient.connect(this.mongoUrl, { useUnifiedTopology: true });
       try {
          const database = client.db(this.databaseName);
-         const configsCollection = database.collection<AutomationConfig>(this.collection);
-         await configsCollection.deleteOne({ _id: id });
+         const configsCollection = database.collection<MongoAutomation>(this.collection);
+         await configsCollection.deleteOne({ _id: ObjectId.createFromHexString(id) });
       } finally {
          client.close();
       }
