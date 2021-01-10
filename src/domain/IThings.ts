@@ -1,6 +1,7 @@
+import { Id } from './Id'
 import { IThing } from './IThing'
 
 export interface IThings {
    all(): Promise<IThing[]>;
-   one(id: number): Promise<IThing | undefined>;
+   one(id: Id): Promise<IThing | undefined>;
 }

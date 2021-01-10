@@ -8,7 +8,7 @@ export const ThingsController = (things: IThings): Router => {
   router.get('/', async (req: Request, res: Response) => {
     try {
       const allThings = await things.all();
-      const onlyData = allThings.map(t => t.data);
+      const onlyData = allThings.map(t => t.properties);
       res.status(200).send(onlyData);
     }
     catch (error) {
@@ -19,14 +19,16 @@ export const ThingsController = (things: IThings): Router => {
 
   router.post('/:id/commands', async (req: Request, res: Response) => {
     try {
-      const id = Number(req.params.id);
+      const id = req.params.id;
       const thing = await things.one(id);
       
       const isUnknownThing = thing === undefined;
       if (isUnknownThing)
         return res.status(404).send();
 
-      await thing!.handleCommand(req.body);
+      const commands = req.body;
+      await thing!.handleCommand(commands);
+      console.log(`Thing commands were executed. ThingId: ${id}; Commands: ${JSON.stringify(commands)}`);
       res.status(200).send();
     }
     catch (error) {
@@ -37,7 +39,7 @@ export const ThingsController = (things: IThings): Router => {
 
   router.get('/:id/status', async (req: Request, res: Response) => {
     try {
-      const id = Number(req.params.id);
+      const id = req.params.id;
       const thing = await things.one(id);
       
       const isUnknownThing = thing === undefined;
@@ -55,7 +57,7 @@ export const ThingsController = (things: IThings): Router => {
 
   router.get('/:id/telemetry', async (req: Request, res: Response) => {
     try {
-      const id = Number(req.params.id);
+      const id = req.params.id;
       const thing = await things.one(id);
       
       const isUnknownThing = thing === undefined;

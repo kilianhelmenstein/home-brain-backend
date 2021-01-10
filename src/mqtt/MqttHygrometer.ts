@@ -1,6 +1,7 @@
 import { AsyncMqttClient } from 'async-mqtt';
 
 import { IThing, IThingData, ThingType } from '../domain/IThing';
+import { Id } from '../domain/Id';
 
 interface IHygrometerTelemetry {
    temperature: number;
@@ -9,15 +10,15 @@ interface IHygrometerTelemetry {
 
 export class MqttHygrometer implements IThing {
    private telemetries: IHygrometerTelemetry[];
-   public data: IThingData;
+   public properties: IThingData;
 
    constructor(
       private mqttClient: AsyncMqttClient,
       private topic: string,
-      id: number,
+      id: Id,
       name: string) {
       this.telemetries = [];
-      this.data = { id: id, name: name, type: ThingType.Hygrometer };
+      this.properties = { id: id, name: name, type: ThingType.Hygrometer };
    }
 
    async init() {

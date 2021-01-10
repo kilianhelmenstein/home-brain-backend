@@ -1,4 +1,5 @@
 import { IThing, IThingData, ThingType } from "../domain/IThing";
+import { Id } from "../domain/Id";
 
 export interface IThermostatInfo {
    status: {
@@ -24,11 +25,11 @@ export interface IThermostatCommands {
 
 export class BluetoothEq3Thermostat implements IThing {
    private isConnected: boolean;
-   data: IThingData;
+   properties: IThingData;
 
-   constructor(private eq3: any, id: number, name: string) {
+   constructor(private eq3: any, id: Id, name: string) {
       this.isConnected = false;
-      this.data = { id, name, type: ThingType.Thermostat };
+      this.properties = { id, name, type: ThingType.Thermostat };
 
       this.eq3.on('disconnect', () => this.isConnected = false );
    }
@@ -66,7 +67,7 @@ export class BluetoothEq3Thermostat implements IThing {
          if (thermostatCommands.temperatureOffset)
             await this.eq3.setTemperatureOffset(thermostatCommands.temperatureOffset);
       } catch (e) {
-         console.log(`Error while handle command for ${this.data.name}: `, e);
+         throw `Error while executing command. Thing type: Eq3 bluetooth thermostat. Error :${e}`;
       }
    }
    
@@ -80,20 +81,21 @@ export class BluetoothEq3Thermostat implements IThing {
          const info = await this.eq3.getInfo();
          return info;
       } catch (e) {
-         console.log(`Error while getInfo() from ${this.data.name}: `, e);
+         throw `Error while reading thing status. Thing type: Eq3 bluetooth thermostat. Error: ${e}`;
       }
    }
    
    private async ensureConnection() {
       if (this.isConnected) {
-         console.log(`Already connected to ${this.data.name}`);
+         console.log(`Already connected to ${this.properties.name}`);
          return;
       }
       try {
          await this.eq3.connectAndSetup();
-         console.log(`Connected to ${this.data.name}`);
          this.isConnected = true;      
+         console.log(`Connected to Eq3 blueetooth thermostat. Thing ${this.properties}`);
       } catch (e) {
+         throw `Cannot connect to Eq3 blueetooth thermostat. Thing ${this.properties}`;
       }
    }
 }

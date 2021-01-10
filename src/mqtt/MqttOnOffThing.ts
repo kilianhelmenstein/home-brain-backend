@@ -1,6 +1,8 @@
 import { AsyncMqttClient } from 'async-mqtt';
 
 import { IThing, IThingData, ThingType } from '../domain/IThing';
+import { Id } from '../domain/Id';
+
 import AsBuffer from '../utils/AsBuffer';
 
 interface SwitchCommand {
@@ -8,14 +10,14 @@ interface SwitchCommand {
 }
 
 export class MqttOnOffThing implements IThing {
-   public data: IThingData;
+   public properties: IThingData;
 
    constructor(
       private mqttClient: AsyncMqttClient,
       private topic: string,
-      id: number,
+      id: Id,
       name: string) {
-      this.data = { id: id, name: name, type: ThingType.OnOff };
+      this.properties = { id: id, name: name, type: ThingType.OnOff };
    }
    
    async handleCommand(command: any) {

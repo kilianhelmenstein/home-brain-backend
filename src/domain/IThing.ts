@@ -1,3 +1,5 @@
+import { Id } from './Id'
+
 export enum ThingType {
    OnOff,
    Hygrometer,
@@ -5,13 +7,13 @@ export enum ThingType {
 }
 
 export interface IThingData {
-   id: number;
+   id: Id;
    name: string;
    type: ThingType;
 }
 
 export interface IThing {
-   data: IThingData;
+   properties: IThingData;
    handleCommand(command: any): Promise<void>;
    status(): Promise<any>;
    telemetry(): Promise<any>;
