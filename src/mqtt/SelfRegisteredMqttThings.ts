@@ -1,7 +1,7 @@
 import { AsyncMqttClient } from 'async-mqtt';
 
 import { IThings } from '../domain/IThings';
-import { IRegisteredThings } from '../domain/IRegisteredThings';
+import { IKnownThings } from '../domain/IKnownThings';
 import { IThing } from '../domain/IThing';
 import { Id } from '../domain/Id';
 
@@ -19,7 +19,7 @@ interface RegistrationInfo {
 export class SelfRegisteredMqttThings implements IThings {
    private things: IThing[];
 
-   constructor(private registeredThings: IRegisteredThings, private mqttClient: AsyncMqttClient) {
+   constructor(private knownThings: IKnownThings, private mqttClient: AsyncMqttClient) {
       this.things = [];
    }
 
@@ -32,10 +32,10 @@ export class SelfRegisteredMqttThings implements IThings {
          
       const registrationInfo = JSON.parse(message.toString()) as RegistrationInfo;
       if (registrationInfo.type === 'onoff') {
-         const registeredThing = await this.registeredThings.add(registrationInfo.topic, registrationInfo.name);
-         const thing = new MqttOnOffThing(this.mqttClient, registrationInfo.topic, registeredThing.thingId, registeredThing.name);
+         const knownThing = await this.knownThings.add(registrationInfo.topic, registrationInfo.name);
+         const thing = new MqttOnOffThing(this.mqttClient, registrationInfo.topic, knownThing.thingId, knownThing.name);
          this.things.push(thing);
-         console.log(`Self-Registered MQTT device. Type: OnOff. Id: ${registeredThing.thingId}. Name: ${registeredThing.name}. Registration message: ${message}`);
+         console.log(`Self-Registered MQTT device. Type: OnOff. Id: ${knownThing.thingId}. Name: ${knownThing.name}. Registration message: ${message}`);
       } else {
             console.log(`Self-Registering of MQTT device failed. Reason: Type not supported. Registration message: ${message}`);
          }

@@ -7,7 +7,7 @@ import { Id } from '../domain/Id';
 export const ThingGroupsController = (thingGroups: IThingGroups): Router => {
   const router: Router = Router();
 
-  router.get('/', async (req: Request, res: Response) => {
+  router.get('/', async (_req: Request, res: Response) => {
     try {
       const allGroups = await thingGroups.all();
       res.status(200).send(allGroups);

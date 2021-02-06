@@ -6,7 +6,7 @@ import { IAutomationConfigs, AutomationConfig } from '../domain/IAutomationConfi
 export const AutomationConfigsController = (automationConfigs: IAutomationConfigs): Router => {
   const router: Router = Router();
 
-  router.get('/', async (req: Request, res: Response) => {
+  router.get('/', async (_req: Request, res: Response) => {
     try {
       const allConfigs = await automationConfigs.all();
       res.status(200).send(allConfigs);

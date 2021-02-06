@@ -12,10 +12,10 @@ import { IThings } from './domain/IThings';
 import { CollectedThings } from './domain/CollectedThings';
 
 import { SelfRegisteredMqttThings } from './mqtt/SelfRegisteredMqttThings';
-import { ManualRegisteredMqttThings } from './mqtt/ManualRegisteredMqttThings';
+import { ManualConfiguredMqttThings } from './mqtt/ManualConfiguredMqttThings';
 import { BluetoothEq3Thermostats } from './bluetooth/BluetoothEq3Thermostats';
 
-import { MongoRegisteredThings } from './dataAccess/MongoRegisteredThings';
+import { MongoKnownThings } from './dataAccess/MongoKnownThings';
 import { MongoDashboards } from './dataAccess/MongoDashboards';
 import { MongoThingGroups } from './dataAccess/MongoThingGroups';
 import { MongoRecordingConfigs } from './dataAccess/MongoRecordingConfigs';
@@ -38,7 +38,7 @@ async function run() {
    const mqttClient = await mqtt.connectAsync(mqttServer, { protocolId: 'MQIsdp', protocolVersion: 3, connectTimeout:1000 });
    console.log(`Connected to MQTT-Server: ${mqttServer}`);
 
-   const registeredThings = new MongoRegisteredThings(mongoUrl, mongoDatabase);
+   const registeredThings = new MongoKnownThings(mongoUrl, mongoDatabase);
    const dashboards = new MongoDashboards(mongoUrl, mongoDatabase);
    const thingGroups = new MongoThingGroups(mongoUrl, mongoDatabase);
    const recordingConfigs = new MongoRecordingConfigs(mongoUrl, mongoDatabase);
@@ -62,7 +62,7 @@ async function run() {
    }
 
    try {
-      const configuredMqttThings = new ManualRegisteredMqttThings(registeredThings, mqttClient, mqttThings.things);
+      const configuredMqttThings = new ManualConfiguredMqttThings(registeredThings, mqttClient, mqttThings.things);
       await configuredMqttThings.init();
       thingSources.push(configuredMqttThings);
    } catch (e) {

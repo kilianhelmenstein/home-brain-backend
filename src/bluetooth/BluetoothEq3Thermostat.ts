@@ -1,7 +1,7 @@
 import { IThing, IThingData, ThingType } from "../domain/IThing";
 import { Id } from "../domain/Id";
 
-export interface IThermostatInfo {
+interface IThermostatInfo {
    status: {
       manual: boolean;
       holiday: boolean;
@@ -14,7 +14,7 @@ export interface IThermostatInfo {
    targetTemperature: number;
 }
 
-export interface IThermostatCommands {
+interface IThermostatCommands {
    mode: 'auto' | 'manu' | 'eco' | undefined;
    valve: 'on' | 'off' | undefined;
    boost: boolean | undefined;

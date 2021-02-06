@@ -1,6 +1,6 @@
 import EQ3BLE from '@nullent1ty/eq3ble';
 
-import { IRegisteredThings } from '../domain/IRegisteredThings';
+import { IKnownThings } from '../domain/IKnownThings';
 import { IThings } from '../domain/IThings';
 import { IThing } from '../domain/IThing';
 import { Id } from '../domain/Id';
@@ -15,7 +15,7 @@ interface IBluetoothThermostatConfig {
 export class BluetoothEq3Thermostats implements IThings {
    private thermostats: BluetoothEq3Thermostat[];
 
-   constructor(private registeredThings: IRegisteredThings, private configs: IBluetoothThermostatConfig[]) {
+   constructor(private knownThings: IKnownThings, private configs: IBluetoothThermostatConfig[]) {
       this.thermostats = [];
    }
 
@@ -33,7 +33,7 @@ export class BluetoothEq3Thermostats implements IThings {
                console.log(`Discovered eq3 bluetooth thermostat does not match to any configured things. MAC address: ${bluetoothDevice.address}.`);
             }
 
-            const registeredThing = await this.registeredThings.add(bluetoothDevice.address, isConfigured ? config.name : bluetoothDevice.address)
+            const registeredThing = await this.knownThings.add(bluetoothDevice.address, isConfigured ? config.name : bluetoothDevice.address)
             const thermostat = new BluetoothEq3Thermostat(bluetoothDevice, registeredThing.thingId, registeredThing.name);
             this.thermostats.push(thermostat);
          });

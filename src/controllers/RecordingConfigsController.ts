@@ -5,7 +5,7 @@ import { IRecordingConfigs, RecordingConfig } from '../domain/IRecordingConfigs'
 export const RecordingConfigsController = (recordingConfigs: IRecordingConfigs): Router => {
   const router: Router = Router();
 
-  router.get('/', async (req: Request, res: Response) => {
+  router.get('/', async (_req: Request, res: Response) => {
     try {
       const allConfigs = await recordingConfigs.all();
       res.status(200).send(allConfigs);

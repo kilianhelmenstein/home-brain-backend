@@ -5,7 +5,7 @@ import { IThings } from '../domain/IThings';
 export const ThingsController = (things: IThings): Router => {
   const router: Router = Router();
 
-  router.get('/', async (req: Request, res: Response) => {
+  router.get('/', async (_req: Request, res: Response) => {
     try {
       const allThings = await things.all();
       const onlyData = allThings.map(t => t.properties);

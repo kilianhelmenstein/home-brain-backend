@@ -8,7 +8,7 @@ const userId = '1';
 export const DashboardController = (dashboards: IDashboards, things: IThings): Router => {
   const router: Router = Router();
 
-  router.get('/', async (req: Request, res: Response) => {
+  router.get('/', async (_req: Request, res: Response) => {
     try {
       const thingIds = await dashboards.thingIds(userId);
       const dashbaordThings = await Promise.all(thingIds.map(thingId => things.one(thingId)))
