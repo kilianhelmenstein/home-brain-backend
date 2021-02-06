@@ -9,7 +9,7 @@ import mqtt from 'async-mqtt';
 import apiRouter from './controllers'; 
 
 import { IThings } from './domain/IThings';
-import { CollectedThings } from './domain/CollectedThings';
+import { CombinedThings } from './domain/CombinedThings';
 
 import { SelfRegisteredMqttThings } from './mqtt/SelfRegisteredMqttThings';
 import { ManualConfiguredMqttThings } from './mqtt/ManualConfiguredMqttThings';
@@ -73,7 +73,7 @@ async function run() {
    app.use(bodyParser.json())
    app.use(morgan('tiny'));
    app.use(cors());
-   app.use('/api', apiRouter(new CollectedThings(thingSources), dashboards, thingGroups, recordingConfigs, automationConfigs));
+   app.use('/api', apiRouter(new CombinedThings(thingSources), dashboards, thingGroups, recordingConfigs, automationConfigs));
    app.listen(port, () => console.log(`Listening on port ${port}`));
 }
 

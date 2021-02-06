@@ -2,7 +2,7 @@ import { IThing } from './IThing';
 import { IThings } from './IThings'
 import { Id } from './Id'
 
-export class CollectedThings implements IThings {
+export class CombinedThings implements IThings {
    constructor(private sources: IThings[]) {
    }
    
